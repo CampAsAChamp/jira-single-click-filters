@@ -10,13 +10,18 @@ let isProcessingClick = false;
 function initializeExtension() {
   console.log('Jira Mutually Exclusive Quick Filters: Initializing extension');
   
-  const filterContainer = document.querySelector('dl#js-work-quickfilters');
+  // Try multiple selectors for different Jira views
+  // Sprint board: dl#js-work-quickfilters
+  // Backlog: dl#js-plan-quickfilters
+  const filterContainer = document.querySelector('dl#js-work-quickfilters, dl#js-plan-quickfilters');
   if (!filterContainer) {
     console.log('Jira Mutually Exclusive Quick Filters: Filter container not found');
     return;
   }
 
-  // Get all filter buttons
+  console.log('Jira Mutually Exclusive Quick Filters: Filter container found:', filterContainer.id);
+
+  // Get all filter buttons (same class for both views)
   const filterButtons = document.querySelectorAll('.js-quickfilter-button');
   console.log(`Jira Exclusive Quick Filters: Found ${filterButtons.length} filter buttons`);
 
@@ -57,7 +62,7 @@ function initializeExtension() {
         const clickedFilterName = button.textContent.trim();
         console.log(`Jira Exclusive Quick Filters: Processing click on "${clickedFilterName}" (ID: ${clickedFilterId})`);
 
-        // Find all currently active filters
+        // Find all currently active filters (works for both sprint and backlog views)
         const activeFilters = document.querySelectorAll('.js-quickfilter-button.ghx-active');
         console.log(`Jira Exclusive Quick Filters: Found ${activeFilters.length} active filters`);
 
@@ -86,7 +91,8 @@ function initializeExtension() {
 
 // Use MutationObserver to wait for the quick filters to load
 const observer = new MutationObserver((mutations, obs) => {
-  const filterContainer = document.querySelector('dl#js-work-quickfilters');
+  // Check for both sprint board and backlog quick filters
+  const filterContainer = document.querySelector('dl#js-work-quickfilters, dl#js-plan-quickfilters');
   if (filterContainer) {
     console.log('Jira Mutually Exclusive Quick Filters: Quick filter container found, initializing');
     initializeExtension();
@@ -104,7 +110,7 @@ observer.observe(document.body, {
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
   console.log('Jira Mutually Exclusive Quick Filters: Document already loaded, attempting immediate initialization');
   setTimeout(() => {
-    const filterContainer = document.querySelector('dl#js-work-quickfilters');
+    const filterContainer = document.querySelector('dl#js-work-quickfilters, dl#js-plan-quickfilters');
     if (filterContainer) {
       initializeExtension();
       observer.disconnect();
