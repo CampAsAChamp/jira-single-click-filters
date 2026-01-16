@@ -1,4 +1,4 @@
-# Jira Exclusive Quick Filters
+# Jira Mutually Exclusive Quick Filters
 
 A Chrome extension that makes Jira quick filters mutually exclusive - clicking one filter automatically deselects all others.
 
@@ -21,7 +21,7 @@ By default, Jira allows you to combine multiple quick filters by clicking them. 
 1. Open Chrome and navigate to `chrome://extensions/`
 2. Enable **Developer mode** (toggle in the top-right corner)
 3. Click **Load unpacked**
-4. Select the `jira-exclusive-filters` folder
+4. Select the `jira-mutually-exclusive-quick-filters` folder
 5. The extension should now appear in your toolbar
 
 ### Reloading After Changes
@@ -71,11 +71,11 @@ The extension uses DOM manipulation to detect when quick filters are clicked and
 - Open a Jira page
 - Press **F12** to open DevTools
 - Go to the **Console** tab
-- Look for messages starting with "Jira Exclusive Quick Filters:"
+- Look for messages starting with "Jira Mutually Exclusive Quick Filters:"
 
 **Debug Background Service Worker:**
 - Go to `chrome://extensions/`
-- Find "Jira Exclusive Quick Filters"
+- Find "Jira Mutually Exclusive Quick Filters"
 - Click **"Inspect views: service worker"**
 - View logs from `background.js`
 
@@ -90,7 +90,7 @@ The extension uses DOM manipulation to detect when quick filters are clicked and
 
 **Filters not being deselected:**
 1. Open DevTools Console on the Jira page
-2. Look for "Jira Exclusive Quick Filters:" log messages
+2. Look for "Jira Mutually Exclusive Quick Filters:" log messages
 3. Verify the feature is enabled in the popup
 4. Check if the filter buttons have the expected classes
 
@@ -126,7 +126,7 @@ The extension uses DOM manipulation to detect when quick filters are clicked and
 ### Project Structure
 
 ```
-jira-exclusive-filters/
+jira-mutually-exclusive-quick-filters/
 ├── manifest.json          # Extension configuration
 ├── content.js            # Main logic for filter manipulation
 ├── background.js         # Service worker for state management

@@ -1,18 +1,18 @@
-// Jira Exclusive Quick Filters - Content Script
+// Jira Mutually Exclusive Quick Filters - Content Script
 // Makes quick filters mutually exclusive by auto-deselecting others when one is clicked
 
-console.log('Jira Exclusive Quick Filters: Content script loaded');
+console.log('Jira Mutually Exclusive Quick Filters: Content script loaded');
 
 // Flag to prevent recursive clicking
 let isProcessingClick = false;
 
 // Initialize the extension once the quick filters are loaded
 function initializeExtension() {
-  console.log('Jira Exclusive Quick Filters: Initializing extension');
+  console.log('Jira Mutually Exclusive Quick Filters: Initializing extension');
   
   const filterContainer = document.querySelector('dl#js-work-quickfilters');
   if (!filterContainer) {
-    console.log('Jira Exclusive Quick Filters: Filter container not found');
+    console.log('Jira Mutually Exclusive Quick Filters: Filter container not found');
     return;
   }
 
@@ -21,7 +21,7 @@ function initializeExtension() {
   console.log(`Jira Exclusive Quick Filters: Found ${filterButtons.length} filter buttons`);
 
   if (filterButtons.length === 0) {
-    console.log('Jira Exclusive Quick Filters: No filter buttons found');
+    console.log('Jira Mutually Exclusive Quick Filters: No filter buttons found');
     return;
   }
 
@@ -34,7 +34,7 @@ function initializeExtension() {
     button.addEventListener('click', async (e) => {
       // Prevent recursive clicking
       if (isProcessingClick) {
-        console.log('Jira Exclusive Quick Filters: Already processing a click, skipping');
+        console.log('Jira Mutually Exclusive Quick Filters: Already processing a click, skipping');
         return;
       }
 
@@ -45,7 +45,7 @@ function initializeExtension() {
       console.log(`Jira Exclusive Quick Filters: Feature enabled: ${isEnabled}`);
 
       if (!isEnabled) {
-        console.log('Jira Exclusive Quick Filters: Feature disabled, allowing normal behavior');
+        console.log('Jira Mutually Exclusive Quick Filters: Feature disabled, allowing normal behavior');
         return;
       }
 
@@ -81,14 +81,14 @@ function initializeExtension() {
     }, true); // Use capture phase to run before Jira's handlers
   });
 
-  console.log('Jira Exclusive Quick Filters: Extension initialized successfully');
+  console.log('Jira Mutually Exclusive Quick Filters: Extension initialized successfully');
 }
 
 // Use MutationObserver to wait for the quick filters to load
 const observer = new MutationObserver((mutations, obs) => {
   const filterContainer = document.querySelector('dl#js-work-quickfilters');
   if (filterContainer) {
-    console.log('Jira Exclusive Quick Filters: Quick filter container found, initializing');
+    console.log('Jira Mutually Exclusive Quick Filters: Quick filter container found, initializing');
     initializeExtension();
     obs.disconnect();
   }
@@ -102,7 +102,7 @@ observer.observe(document.body, {
 
 // Also try to initialize immediately in case filters are already loaded
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
-  console.log('Jira Exclusive Quick Filters: Document already loaded, attempting immediate initialization');
+  console.log('Jira Mutually Exclusive Quick Filters: Document already loaded, attempting immediate initialization');
   setTimeout(() => {
     const filterContainer = document.querySelector('dl#js-work-quickfilters');
     if (filterContainer) {
