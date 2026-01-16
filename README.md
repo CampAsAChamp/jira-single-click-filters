@@ -10,8 +10,9 @@ By default, Jira allows you to combine multiple quick filters by clicking them. 
 
 - **Mutually Exclusive Filters**: Clicking a quick filter automatically deselects all other active filters
 - **Toggle On/Off**: Enable or disable the feature via the extension popup
-- **Works on All Boards**: Applies to all Jira boards on your-jira-instance.atlassian.net
-- **Persistent Settings**: Your preference is saved across browser sessions
+- **Universal Jira Support**: Works automatically on any Jira instance (Cloud, Data Center, Server)
+- **Custom URL Configuration**: Add support for Jira instances with unusual URL patterns
+- **Persistent Settings**: Your preferences are saved across browser sessions
 - **Visual Feedback**: Badge indicator shows when the feature is disabled
 
 ## 📦 Installation
@@ -33,18 +34,41 @@ If you make any code changes:
 
 ## 🚀 Usage
 
+### Basic Usage
+
 1. Navigate to any Jira board (e.g., your team's sprint board)
 2. Click the extension icon in your Chrome toolbar
-3. Toggle **"Make quick filters mutually exclusive"** on or off
+3. Toggle **"Quick Filters Mutually Exclusive"** on or off
 4. When enabled:
    - Click any quick filter → it activates
    - Click a different filter → the previous one auto-deselects
 5. When disabled:
    - Filters work normally (can combine multiple filters)
 
+### Supported Jira Instances
+
+The extension **automatically works** on:
+- ✅ **Atlassian Cloud**: `*.atlassian.net` (e.g., `yourcompany.atlassian.net`)
+
+For all other Jira instances (self-hosted, Data Center, Server), you'll need to add your Jira URL as a custom URL (one-time setup).
+
+### Adding Custom Jira URLs
+
+For self-hosted Jira instances, Jira Data Center, or Server installations:
+
+1. Click the extension icon in your Chrome toolbar
+2. Scroll to the **"Custom Jira URLs"** section
+3. Enter your Jira URL (e.g., `https://jira.yourcompany.com`)
+4. Click **"Add URL"**
+5. Grant permissions when prompted
+6. The extension will now work on your custom Jira instance
+
+**To remove a custom URL:**
+- Click the **"Remove"** button next to the URL in the list
+
 ## 🔧 How It Works
 
-The extension uses DOM manipulation to detect when quick filters are clicked and automatically deselects other active filters before the click completes.
+The extension uses **event delegation** to detect when quick filters are clicked and automatically deselects other active filters before the click completes. It monitors both the Backlog and Active Sprint views, initializing listeners for each independently to handle dynamic DOM changes when switching between tabs.
 
 **Key Components:**
 - **manifest.json**: Extension configuration
@@ -53,8 +77,15 @@ The extension uses DOM manipulation to detect when quick filters are clicked and
 - **background.js**: Service worker for state management
 - **icons/**: Extension icons (16px, 48px, 128px)
 
+**Technical Implementation:**
+- Uses a `MutationObserver` to detect when filter containers appear
+- Initializes both Backlog and Active Sprint containers independently
+- Event delegation ensures listeners work even when Jira recreates DOM elements
+- Tracks initialized containers by DOM element reference (not just ID)
+
 **Confirmed Jira Selectors:**
-- Container: `dl#js-work-quickfilters`
+- Backlog container: `dl#js-plan-quickfilters`
+- Active Sprint container: `dl#js-work-quickfilters`
 - Filter buttons: `.js-quickfilter-button`
 - Active filters: `.js-quickfilter-button.ghx-active`
 - Filter ID: `data-filter-id` attribute
@@ -121,6 +152,12 @@ The extension uses DOM manipulation to detect when quick filters are clicked and
 - [ ] Test browser back/forward buttons
 - [ ] Verify no console errors
 
+**Multi-Tab Support:**
+- [ ] Start on Backlog tab - verify filters work
+- [ ] Switch to Active Sprint tab - verify filters work
+- [ ] Switch back to Backlog tab - verify filters still work
+- [ ] Repeat tab switching multiple times - verify no regressions
+
 ## 📝 Development
 
 ### Project Structure
@@ -144,9 +181,31 @@ jira-mutually-exclusive-quick-filters/
 ### Tech Stack
 
 - **Manifest Version**: 3
-- **Permissions**: `storage` (for saving user preferences)
-- **Host Permissions**: `https://your-jira-instance.atlassian.net/*`
-- **APIs Used**: Chrome Storage API, Content Scripts, Service Workers
+- **Permissions**: 
+  - `storage` - for saving user preferences
+  - `scripting` - for dynamic content script injection
+  - `activeTab` - for interacting with the current tab
+- **Host Permissions**: 
+  - `*://*.atlassian.net/*` - Atlassian Cloud instances (automatic)
+- **Optional Permissions**: `<all_urls>` - for user-configured custom URLs (requested only when you add a URL)
+- **APIs Used**: 
+  - Chrome Storage API - state persistence
+  - Chrome Scripting API - dynamic content script injection
+  - Content Scripts - filter manipulation
+  - Service Workers - background processes
+
+## 📝 Changelog
+
+### Version 1.0.0 (2026-01-16)
+- ✨ Universal Jira support - works on any Jira instance (Cloud, Data Center, Server)
+- ✨ Automatic detection of common Jira URL patterns
+- ✨ Custom URL configuration for unusual Jira instances
+- ✨ Dynamic content script injection for custom URLs
+- ✨ Mutually exclusive quick filter functionality
+- ✨ Toggle on/off via extension popup
+- ✨ Support for both Backlog and Active Sprint tabs
+- 🐛 Fixed: Filters now work consistently when switching between Backlog and Active Sprint tabs multiple times
+- 🔧 Robust event delegation prevents issues with dynamic DOM changes
 
 ## 📄 License
 
