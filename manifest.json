@@ -4,10 +4,15 @@
   "version": "1.0.0",
   "description": "Makes Jira quick filters mutually exclusive - clicking one filter automatically deselects all others.",
   "permissions": [
-    "storage"
+    "storage",
+    "scripting",
+    "activeTab"
   ],
   "host_permissions": [
     "*://*.atlassian.net/*"
+  ],
+  "optional_host_permissions": [
+    "<all_urls>"
   ],
   "action": {
     "default_popup": "popup.html",
@@ -24,8 +29,12 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://*.atlassian.net/*"],
-      "js": ["content.js"],
+      "matches": [
+        "*://*.atlassian.net/*"
+      ],
+      "js": [
+        "content.js"
+      ],
       "run_at": "document_idle"
     }
   ],

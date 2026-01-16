@@ -170,6 +170,159 @@ input:focus + .slider {
   color: #856404;
 }
 
+.divider {
+  height: 1px;
+  background: #e0e0e0;
+  margin: 24px 0;
+}
+
+.custom-urls-section {
+  margin-top: 20px;
+}
+
+.custom-urls-section h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.custom-urls-section h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+
+.help-text {
+  font-size: 12px;
+  color: #666;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.url-input-container {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+#customUrlInput {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 13px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  transition: border-color 0.2s;
+  font-family: inherit;
+}
+
+#customUrlInput:focus {
+  outline: none;
+  border-color: #0747A6;
+}
+
+#customUrlInput.error {
+  border-color: #dc3545;
+}
+
+#addUrlButton {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  background: #0747A6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+#addUrlButton:hover {
+  background: #0052CC;
+}
+
+#addUrlButton:active {
+  background: #003E9E;
+}
+
+.validation-error {
+  font-size: 12px;
+  color: #dc3545;
+  margin-bottom: 8px;
+  min-height: 18px;
+}
+
+.urls-list-container {
+  margin-top: 12px;
+}
+
+.urls-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.url-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  transition: background-color 0.2s;
+}
+
+.url-item:hover {
+  background: #f0f0f0;
+}
+
+.url-text {
+  font-size: 13px;
+  color: #333;
+  word-break: break-all;
+  flex: 1;
+  margin-right: 12px;
+}
+
+.remove-url-button {
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  flex-shrink: 0;
+}
+
+.remove-url-button:hover {
+  background: #c82333;
+}
+
+.remove-url-button:active {
+  background: #bd2130;
+}
+
+.no-urls-message {
+  font-size: 13px;
+  color: #999;
+  font-style: italic;
+  padding: 12px;
+  text-align: center;
+  background: #f9f9f9;
+  border-radius: 6px;
+}
+
+.no-urls-message.hidden {
+  display: none;
+}
+
 .footer {
   padding: 12px 20px;
   background: #f9f9f9;
