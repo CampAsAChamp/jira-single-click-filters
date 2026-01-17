@@ -129,11 +129,15 @@ input:focus + .slider {
   padding: 8px 10px;
   border-radius: 6px;
   margin-bottom: 8px;
-  font-style: italic;
 }
 
 .description p {
   margin: 0;
+  font-style: italic;
+}
+
+.description p + p {
+  margin-top: 8px;
 }
 
 /* Toast notification (replaces the old status element) */
