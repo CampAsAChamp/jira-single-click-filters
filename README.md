@@ -10,8 +10,7 @@ By default, Jira allows you to combine multiple quick filters by clicking them. 
 
 - **Mutually Exclusive Filters**: Clicking a quick filter automatically deselects all other active filters
 - **Toggle On/Off**: Enable or disable the feature via the extension popup
-- **Universal Jira Support**: Works automatically on any Jira instance (Cloud, Data Center, Server)
-- **Custom URL Configuration**: Add support for Jira instances with unusual URL patterns
+- **Universal Jira Support**: Works automatically on most Jira instances (Cloud, Data Center, Server)
 - **Persistent Settings**: Your preferences are saved across browser sessions
 - **Visual Feedback**: Badge indicator shows when the feature is disabled
 
@@ -49,22 +48,10 @@ If you make any code changes:
 
 The extension **automatically works** on:
 - ✅ **Atlassian Cloud**: `*.atlassian.net` (e.g., `yourcompany.atlassian.net`)
+- ✅ **Self-hosted with /jira path**: `*.com/jira/*` (e.g., `company.com/jira`)
+- ✅ **Jira subdomains**: `jira.*` (e.g., `jira.company.com`)
 
-For all other Jira instances (self-hosted, Data Center, Server), you'll need to add your Jira URL as a custom URL (one-time setup).
-
-### Adding Custom Jira URLs
-
-For self-hosted Jira instances, Jira Data Center, or Server installations:
-
-1. Click the extension icon in your Chrome toolbar
-2. Scroll to the **"Custom Jira URLs"** section
-3. Enter your Jira URL (e.g., `https://jira.yourcompany.com`)
-4. Click **"Add URL"**
-5. Grant permissions when prompted
-6. The extension will now work on your custom Jira instance
-
-**To remove a custom URL:**
-- Click the **"Remove"** button next to the URL in the list
+The extension uses pattern matching to work with most common Jira URL structures.
 
 ## 🔧 How It Works
 
@@ -186,8 +173,9 @@ jira-mutually-exclusive-quick-filters/
   - `scripting` - for dynamic content script injection
   - `activeTab` - for interacting with the current tab
 - **Host Permissions**: 
-  - `*://*.atlassian.net/*` - Atlassian Cloud instances (automatic)
-- **Optional Permissions**: `<all_urls>` - for user-configured custom URLs (requested only when you add a URL)
+  - `*://*.atlassian.net/*` - Atlassian Cloud instances
+  - `*://*/jira/*` - Self-hosted with /jira path
+  - `*://jira.*/*` - Jira subdomains
 - **APIs Used**: 
   - Chrome Storage API - state persistence
   - Chrome Scripting API - dynamic content script injection
@@ -197,13 +185,11 @@ jira-mutually-exclusive-quick-filters/
 ## 📝 Changelog
 
 ### Version 1.0.0 (2026-01-16)
-- ✨ Universal Jira support - works on any Jira instance (Cloud, Data Center, Server)
-- ✨ Automatic detection of common Jira URL patterns
-- ✨ Custom URL configuration for unusual Jira instances
-- ✨ Dynamic content script injection for custom URLs
 - ✨ Mutually exclusive quick filter functionality
 - ✨ Toggle on/off via extension popup
 - ✨ Support for both Backlog and Active Sprint tabs
+- ✨ Works on Atlassian Cloud, self-hosted Jira with /jira path, and jira.* subdomains
+- ✨ Automatic pattern matching for common Jira URL structures
 - 🐛 Fixed: Filters now work consistently when switching between Backlog and Active Sprint tabs multiple times
 - 🔧 Robust event delegation prevents issues with dynamic DOM changes
 

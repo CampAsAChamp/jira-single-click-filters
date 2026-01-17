@@ -13,24 +13,19 @@ The extension consists of 4 main JavaScript components:
 The background service worker runs persistently and handles:
 
 #### Initial Setup
-- Sets default settings on first install (`mutuallyExclusive: true`, `customJiraUrls: []`)
-- Opens the welcome page for new users
+- Sets default settings on first install (`mutuallyExclusive: true`)
 - Injects content script into all existing Jira tabs on install/update
 
 ```javascript
 chrome.runtime.onInstalled.addListener(async (details) => {
   if (details.reason === 'install') {
     await chrome.storage.sync.set({ 
-      mutuallyExclusive: true,
-      customJiraUrls: [],
-      welcomeShown: false
+      mutuallyExclusive: true
     });
-    chrome.tabs.create({ url: 'welcome.html' });
   }
   
   if (details.reason === 'install' || details.reason === 'update') {
-    const patterns = await getAllUrlPatterns();
-    await injectContentScriptIntoMatchingTabs(patterns);
+    await injectContentScriptIntoAllTabs();
   }
 });
 ```
@@ -39,7 +34,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 - Monitors all tab updates via `chrome.tabs.onUpdated`
 - When a Jira page loads, checks if content script is active
 - Injects content script if not already present
-- Handles both built-in patterns (`*.atlassian.net`) and custom URLs
+- Works with Jira URL patterns defined in manifest (Atlassian Cloud, /jira paths, jira.* subdomains)
 
 #### Badge Management
 - Updates extension badge based on enabled/disabled state
@@ -49,7 +44,6 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 #### Storage Monitoring
 - Listens for changes to settings
 - Updates badge when toggle state changes
-- Injects content script into new custom URLs
 
 ### 2. content.js - Core Functionality
 
@@ -149,52 +143,6 @@ Provides the user interface for controlling the extension via the browser action
 - Notifies all open Jira tabs of the change
 - Shows toast messages for user feedback
 
-**Custom Jira URL Management**
-- Add custom Jira URLs (e.g., self-hosted instances)
-- Validates URL format (must be http/https)
-- Normalizes URLs to match patterns (e.g., `https://jira.company.com/*`)
-- Requests Chrome permissions for new URLs
-- Displays list of configured URLs
-- Remove URLs with × button
-
-**URL Normalization**
-```javascript
-function normalizeUrl(urlString) {
-  const url = new URL(urlString);
-  return `${url.protocol}//${url.host}/*`;
-}
-```
-
-**Permission Handling**
-```javascript
-async function requestPermissionForUrl(normalizedUrl) {
-  const hasPermission = await chrome.permissions.contains({
-    origins: [normalizedUrl]
-  });
-  
-  if (!hasPermission) {
-    const granted = await chrome.permissions.request({
-      origins: [normalizedUrl]
-    });
-    return granted;
-  }
-  
-  return true;
-}
-```
-
-**Known Issue**: The popup may close when permission dialogs appear, requiring users to click "Add URL" twice. This is a Chrome limitation - popups close when permission dialogs are shown.
-
-### 4. welcome.js - First-Time Setup
-
-Runs on the welcome page (`welcome.html`) shown on first install.
-
-#### Functionality
-- Similar to popup.js but simpler
-- Allows users to add their custom Jira URL during initial setup
-- Provides "Skip" and "Get Started" buttons
-- Sets `welcomeShown: true` in storage to prevent re-showing
-
 ## Data Flow
 
 ```
@@ -220,8 +168,6 @@ The extension uses `chrome.storage.sync` (syncs across devices) with the followi
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | `mutuallyExclusive` | boolean | `true` | Whether the mutually exclusive feature is enabled |
-| `customJiraUrls` | array | `[]` | Additional URL patterns beyond `*.atlassian.net` |
-| `welcomeShown` | boolean | `false` | Whether the welcome page has been shown |
 
 Storage is accessed asynchronously:
 ```javascript
@@ -277,7 +223,7 @@ The extension maintains internal state to prevent issues:
 Manifest V3 doesn't allow programmatic content script registration, so the background worker actively injects scripts:
 - On install/update: injects into all existing Jira tabs
 - On tab update: injects when a new Jira page loads
-- On custom URL added: injects into tabs matching the new URL
+- Works with URL patterns defined in manifest
 
 ### 6. Ping-Pong Pattern for Script Detection
 To check if a content script is already active in a tab:
@@ -335,14 +281,11 @@ The extension includes comprehensive error handling:
 
 ### Background Worker
 - Handles permission errors when injecting scripts
-- Continues processing other patterns if one fails
 - Warns about injection failures without blocking
 
-### Popup/Welcome
-- Validates URLs before processing
+### Popup
 - Shows user-friendly error messages
-- Handles permission denial gracefully
-- Clears error states appropriately
+- Handles errors gracefully
 
 ## Performance Considerations
 
@@ -375,11 +318,9 @@ The extension includes comprehensive error handling:
 - `activeTab`: For accessing active tab information
 
 ### Host Permissions
-- `*://*.atlassian.net/*`: Built-in support for Atlassian Cloud
-
-### Optional Permissions
-- `<all_urls>`: Requested on-demand for custom Jira URLs
-- Users grant permission per-URL when adding custom domains
+- `*://*.atlassian.net/*`: Atlassian Cloud instances
+- `*://*/jira/*`: Self-hosted Jira with /jira path
+- `*://jira.*/*`: Jira subdomains
 
 ## Testing Considerations
 
@@ -406,9 +347,9 @@ See `TESTING_GUIDE.md` for detailed testing procedures.
    - Analytics/usage tracking
 
 3. **Technical Improvements**
-   - Better handling of permission dialog popup closing
    - Export/import settings
    - Sync indicator in UI
+   - Support for additional Jira URL patterns
 
 ## References
 

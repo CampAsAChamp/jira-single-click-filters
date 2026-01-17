@@ -14,7 +14,6 @@ This privacy policy describes how the "Jira Mutually Exclusive Quick Filters" Ch
 
 The extension stores the following information locally on your device:
 - Your preference for whether the mutually exclusive feature is enabled or disabled (boolean value)
-- A list of custom Jira URLs you have configured (optional, only if you add them)
 
 This data is stored using Chrome's `chrome.storage.sync` API and is synchronized across your Chrome browsers where you're signed in. This data:
 - Never leaves Google's Chrome infrastructure
@@ -27,25 +26,21 @@ This data is stored using Chrome's `chrome.storage.sync` API and is synchronized
 The extension requires the following permissions to function:
 
 ### `storage`
-Used to save your preferences locally (toggle state and optional custom URLs). This allows the extension to remember your settings across browser sessions.
+Used to save your preferences locally (toggle state). This allows the extension to remember your settings across browser sessions.
 
 ### `scripting`
-Used to dynamically inject the content script into Jira pages matching your custom URLs. This is only used when you configure custom Jira URLs.
+Used to dynamically inject the content script into Jira pages when needed.
 
 ### `activeTab`
 Used to interact with the currently active tab when toggling settings or injecting functionality.
 
 ### `host_permissions`
-Required to inject the content script on Jira pages and manipulate quick filter behavior. The extension automatically works on:
+Required to inject the content script on Jira pages and manipulate quick filter behavior. The extension works on:
 - `*://*.atlassian.net/*` - Atlassian Cloud instances
+- `*://*/jira/*` - Self-hosted Jira with /jira path
+- `*://jira.*/*` - Jira subdomains
 
-For all other Jira instances (self-hosted, Data Center, Server), you add them as custom URLs.
-
-### `optional_host_permissions`
-When you add a custom Jira URL, the extension will request permission to access that specific URL. You have full control over which URLs to grant access to. These permissions:
-- Are only requested when you explicitly add a custom URL
-- Can be revoked at any time by removing the URL or uninstalling the extension
-- Are used solely to enable the extension's functionality on your specified Jira instance
+These permissions are used solely to enable the extension's functionality on common Jira URL patterns.
 
 ## Third-Party Services
 
@@ -88,8 +83,6 @@ This extension complies with:
 Since this extension does not collect any personal data:
 - There is no data to access, modify, or delete beyond what's stored locally in your browser
 - You have complete control over the extension by enabling/disabling or uninstalling it
-- You can remove custom URLs at any time through the extension popup
-- You can revoke permissions for specific URLs through Chrome's extension settings
 - No data leaves your local device except through Chrome's built-in sync mechanism (managed by Google)
 
 ---

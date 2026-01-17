@@ -25,10 +25,10 @@
 #### Screenshots (Required - at least 1, max 5)
 Create screenshots showing:
 1. **Before/After**: Jira board with multiple filters selected vs. mutually exclusive
-2. **Extension Popup**: The toggle switch UI and custom URL configuration
-3. **Custom URLs**: Screenshot showing how to add custom Jira URLs
-4. **In Action**: Animated GIF or video showing filter switching
-5. **Both Tabs**: Show it working on Backlog and Active Sprint
+2. **Extension Popup**: The toggle switch UI
+3. **In Action**: Animated GIF or video showing filter switching
+4. **Both Tabs**: Show it working on Backlog and Active Sprint
+5. **Badge Indicator**: Show the OFF badge when disabled
 
 **Requirements:**
 - Minimum size: 1280x800px or 640x400px
@@ -62,9 +62,8 @@ Tired of manually deselecting Jira quick filters before selecting a new one? Thi
 ## ✨ Key Features
 
 • **Automatic Deselection**: Click any quick filter and all others deselect instantly
-• **Universal Jira Support**: Works on ANY Jira instance - Cloud, Data Center, or Server
+• **Universal Jira Support**: Works on most Jira instances - Cloud, Data Center, and Server
 • **Auto-Detection**: Automatically works on common Jira URL patterns
-• **Custom URL Support**: Easily add support for unusual Jira URLs
 • **Toggle On/Off**: Enable or disable the feature anytime via the extension popup
 • **Works Everywhere**: Supports both Backlog and Active Sprint tabs
 • **Persistent Settings**: Your preferences are saved across browser sessions
@@ -74,14 +73,11 @@ Tired of manually deselecting Jira quick filters before selecting a new one? Thi
 ## 🌐 Supported Jira Instances
 
 **Automatically works on:**
-- ✅ Atlassian Cloud (*.atlassian.net)
+- ✅ Atlassian Cloud (`*.atlassian.net`)
+- ✅ Self-hosted Jira with /jira path (`company.com/jira`)
+- ✅ Jira subdomains (`jira.company.com`)
 
-**Easy one-time setup for:**
-- ✅ Self-hosted Jira instances
-- ✅ Jira Data Center
-- ✅ Jira Server
-
-Simply add your Jira URL in the extension settings (takes 10 seconds). Whether you're using Jira Cloud, Data Center, or Server - this extension has you covered!
+Whether you're using Jira Cloud, Data Center, or Server with standard URL patterns - this extension has you covered!
 
 ## 🎯 Perfect For
 
@@ -89,34 +85,26 @@ Simply add your Jira URL in the extension settings (takes 10 seconds). Whether y
 - Anyone who switches between filters frequently
 - Users who want cleaner, more predictable filter behavior
 - Agile teams managing backlogs and active sprints
-- Organizations using self-hosted Jira instances
-- Teams on Atlassian Cloud
+- Organizations using Jira Cloud, Data Center, or Server
 
 ## 🚀 How to Use
 
 1. Install the extension
 2. Navigate to your Jira board (Backlog or Active Sprint)
-3. The extension automatically works on common Jira instances!
+3. The extension automatically works on supported Jira instances!
 4. Click the extension icon to toggle the feature on/off
-5. For custom Jira URLs: Add your URL in the extension settings
-
-**For unusual Jira URLs:**
-1. Click the extension icon
-2. Scroll to "Custom Jira URLs"
-3. Enter your Jira URL and click "Add URL"
-4. Grant permissions when prompted
+5. That's it - no configuration needed!
 
 ## 🔒 Privacy & Security
 
 - **No Data Collection**: This extension does not collect, store, or transmit any user data
-- **Minimal Permissions**: Only requests access to Jira instances
+- **Minimal Permissions**: Only requests access to common Jira URL patterns
 - **Local Storage Only**: Settings are stored locally in your browser
-- **User Control**: You choose which custom URLs to grant access to
 - **Open Source**: View the code on GitHub
 
 ## 💡 Technical Details
 
-This extension uses event delegation and DOM monitoring to detect filter clicks and automatically deselect others. It works seamlessly with Jira's dynamic interface and handles tab switching between Backlog and Active Sprint views. Dynamic content script injection ensures support for custom Jira instances.
+This extension uses event delegation and DOM monitoring to detect filter clicks and automatically deselect others. It works seamlessly with Jira's dynamic interface and handles tab switching between Backlog and Active Sprint views. Pattern matching ensures support for most Jira installations without requiring additional configuration.
 
 ## 🐛 Support & Feedback
 
@@ -125,12 +113,11 @@ Found a bug or have a feature request? Please report issues on our GitHub reposi
 ## 📝 Version History
 
 **Version 1.0.0**
-- Universal Jira support (Cloud, Data Center, Server)
-- Automatic detection of common Jira URL patterns
-- Custom URL configuration for unusual instances
 - Mutually exclusive quick filter functionality
 - Toggle on/off via extension popup
 - Support for both Backlog and Active Sprint tabs
+- Works on Atlassian Cloud, self-hosted Jira with /jira path, and jira.* subdomains
+- Automatic pattern matching for common Jira URL structures
 - Robust handling of dynamic DOM changes
 
 ---
@@ -177,11 +164,10 @@ This preference is stored using Chrome's local storage API and never leaves your
 
 ## Permissions
 The extension requires the following permissions:
-- **storage**: To save your preferences locally (toggle state and custom URLs)
+- **storage**: To save your preferences locally (toggle state)
 - **scripting**: To inject functionality into Jira pages
 - **activeTab**: To interact with the current tab
-- **host permissions**: To function on Atlassian Cloud (*.atlassian.net)
-- **optional permissions**: Requested only when you add custom Jira URLs for self-hosted instances
+- **host permissions**: To function on common Jira URL patterns (*.atlassian.net, */jira/*, jira.*)
 
 ## Third-Party Services
 This extension does not use any third-party services, analytics, or tracking tools.
