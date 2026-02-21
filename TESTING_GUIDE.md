@@ -11,8 +11,11 @@ This guide helps you test the Jira Mutually Exclusive Quick Filters extension.
 
 The extension works automatically on:
 - **Atlassian Cloud**: `*.atlassian.net` (e.g., `yourcompany.atlassian.net`)
+- **Jira Cloud (Intuit)**: `jira.cloud.intuit.com`
 - **Self-hosted with /jira path**: `*.com/jira/*` (e.g., `company.com/jira`)
 - **Jira subdomains**: `jira.*` (e.g., `jira.company.com`)
+
+For **Jira Cloud** (`jira.cloud.intuit.com`), if quick filters are not detected, open the extension popup once (which triggers a re-scan) or click **Apply to this page**. If filters still don’t work, the board’s DOM may use different selectors; update `SELECTORS_CLOUD` in `content.js` after inspecting the quick filter elements in DevTools.
 
 ## Test Scenarios
 
@@ -114,7 +117,16 @@ The extension works automatically on:
 - Settings persist through update
 - No errors in console
 
-## Testing on Different Jira Instances
+### Scenario 10: Apply to this page (late-loaded board)
+**Steps:**
+1. Navigate to a Jira Cloud board (e.g. `jira.cloud.intuit.com`)
+2. If filters don’t work immediately, open the extension popup
+3. Optionally click **Apply to this page**
+
+**Expected behavior:**
+- Opening the popup triggers re-initialization on the current tab
+- **Apply to this page** re-scans the DOM and attaches to quick filters
+- Mutually exclusive behavior works after re-scan
 
 ### Atlassian Cloud (*.atlassian.net)
 1. Navigate to any `*.atlassian.net` Jira board
