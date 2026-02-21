@@ -3,6 +3,16 @@
 // Constants
 const CONTENT_SCRIPT_FILE = 'content.js';
 
+const JIRA_URL_PATTERNS = [
+  /^https?:\/\/[^/]*\.atlassian\.net\//,
+  /^https?:\/\/jira\.cloud\.intuit\.com\//
+];
+
+function isJiraTab(url) {
+  if (!url) return false;
+  return JIRA_URL_PATTERNS.some(pattern => pattern.test(url));
+}
+
 // Helper: Check if content script is active in a tab
 async function isContentScriptActive(tabId) {
   try {
@@ -29,12 +39,9 @@ async function injectContentScript(tabId, tabUrl) {
 
 // Helper: Process a single tab (check if script is active, inject if needed)
 async function processTab(tab) {
+  if (!isJiraTab(tab.url)) return false;
   const isActive = await isContentScriptActive(tab.id);
-  
-  if (isActive) {
-    return false;
-  }
-  
+  if (isActive) return false;
   return await injectContentScript(tab.id, tab.url);
 }
 
@@ -92,11 +99,10 @@ chrome.storage.sync.get({ mutuallyExclusive: true }, (result) => {
 
 // Listen for tab updates to inject content script if needed
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  // Only proceed when the page has finished loading
   if (changeInfo.status !== 'complete' || !tab.url) return;
+  if (!isJiraTab(tab.url)) return;
 
   const isActive = await isContentScriptActive(tabId);
-
   if (!isActive) {
     await injectContentScript(tabId, tab.url);
   }

@@ -15,11 +15,21 @@ if (window.jiraExclusiveFiltersInjected) {
 const DEBUG = false; // Set to true for verbose logging
 
 const CONFIG = {
-  SELECTORS: {
+  // Legacy Jira (e.g. *.atlassian.net) – Server/Data Center DOM
+  SELECTORS_LEGACY: {
     WORK_CONTAINER: 'dl#js-work-quickfilters',
     PLAN_CONTAINER: 'dl#js-plan-quickfilters',
     FILTER_BUTTON: '.js-quickfilter-button',
-    ACTIVE_FILTER: '.js-quickfilter-button.ghx-active'
+    ACTIVE_FILTER: '.js-quickfilter-button.ghx-active',
+    FILTER_ID_ATTR: 'data-filter-id'
+  },
+  // Jira Cloud (e.g. jira.cloud.intuit.com) – fieldset with label[for^="checkbox-id-"]
+  SELECTORS_CLOUD: {
+    WORK_CONTAINER: 'fieldset:has(label[for^="checkbox-id-"])',
+    PLAN_CONTAINER: 'fieldset:has(label[for^="checkbox-id-"])',
+    FILTER_BUTTON: 'label[for^="checkbox-id-"]',
+    ACTIVE_FILTER: null, // Active filters resolved via checked checkboxes in code
+    FILTER_ID_ATTR: 'for'
   },
   TIMING: {
     CLICK_DELAY: 100,           // Delay before processing click
@@ -31,6 +41,12 @@ const CONFIG = {
 };
 
 const LOG_PREFIX = 'Jira Mutually Exclusive Quick Filters:';
+
+// Return selector set for current host (Jira Cloud vs legacy)
+function getSelectors() {
+  const isCloud = /jira\.cloud\.intuit\.com/i.test(window.location.hostname);
+  return isCloud ? CONFIG.SELECTORS_CLOUD : CONFIG.SELECTORS_LEGACY;
+}
 
 // ============================================================================
 // STATE MANAGEMENT
@@ -105,15 +121,29 @@ if (chrome?.storage?.onChanged) {
 
 // Get filter info helper
 function getFilterInfo(button) {
+  const selectors = getSelectors();
+  const idAttr = selectors.FILTER_ID_ATTR || 'data-filter-id';
+  let id = button.getAttribute(idAttr);
+  if (id == null) id = button.textContent.trim();
   return {
-    id: button.getAttribute('data-filter-id'),
+    id: id != null ? String(id) : button.textContent.trim(),
     name: button.textContent.trim()
   };
 }
 
 // Deselect all active filters except the clicked one
 function deactivateOtherFilters(clickedFilterId) {
-  const activeFilters = document.querySelectorAll(CONFIG.SELECTORS.ACTIVE_FILTER);
+  const selectors = getSelectors();
+  let activeFilters;
+  if (selectors.ACTIVE_FILTER) {
+    activeFilters = document.querySelectorAll(selectors.ACTIVE_FILTER);
+  } else {
+    // Jira Cloud: labels toggle checkboxes; active = checked checkbox, get corresponding label
+    const checkedInputs = document.querySelectorAll('input[id^="checkbox-id-"]:checked');
+    activeFilters = Array.from(checkedInputs)
+      .map(input => document.querySelector(`label[for="${input.id}"]`))
+      .filter(Boolean);
+  }
   log.info(`Found ${activeFilters.length} active filters`);
 
   let deselectedCount = 0;
@@ -168,7 +198,7 @@ async function handleFilterClick(button) {
 
 // Initialize a single container with event delegation
 function initializeContainer(filterContainer) {
-  const containerId = filterContainer.id;
+  const containerId = filterContainer.id || filterContainer.getAttribute('data-testid') || 'quick-filters';
 
   // Check if already initialized
   if (state.initializedContainers.has(filterContainer)) {
@@ -179,7 +209,8 @@ function initializeContainer(filterContainer) {
   log.info(`Initializing container ${containerId}`);
 
   // Check for filter buttons
-  const filterButtons = filterContainer.querySelectorAll(CONFIG.SELECTORS.FILTER_BUTTON);
+  const selectors = getSelectors();
+  const filterButtons = filterContainer.querySelectorAll(selectors.FILTER_BUTTON);
   log.info(`Found ${filterButtons.length} filter buttons in ${containerId}`);
 
   if (filterButtons.length === 0) {
@@ -189,7 +220,7 @@ function initializeContainer(filterContainer) {
 
   // Use event delegation with capture phase
   filterContainer.addEventListener('click', async (e) => {
-    const button = e.target.closest(CONFIG.SELECTORS.FILTER_BUTTON);
+    const button = e.target.closest(selectors.FILTER_BUTTON);
     if (button) {
       log.info(`Filter button clicked via delegation in ${containerId}`);
       await handleFilterClick(button);
@@ -206,11 +237,12 @@ function initializeExtension() {
   log.info('Initializing extension');
 
   let initializedCount = 0;
+  const selectors = getSelectors();
 
   // Try both container types (Sprint board and Backlog)
   const containers = [
-    document.querySelector(CONFIG.SELECTORS.WORK_CONTAINER),
-    document.querySelector(CONFIG.SELECTORS.PLAN_CONTAINER)
+    document.querySelector(selectors.WORK_CONTAINER),
+    document.querySelector(selectors.PLAN_CONTAINER)
   ];
 
   containers.forEach(container => {
@@ -262,5 +294,21 @@ observer.observe(document.body, {
     setTimeout(initializeExtension, CONFIG.TIMING.INIT_DELAY);
   }
 })();
+
+// Listen for messages from background and popup
+if (chrome?.runtime?.onMessage) {
+  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+    if (message?.action === 'ping') {
+      sendResponse(true);
+      return true;
+    }
+    if (message?.action === 'runInit') {
+      initializeExtension();
+      sendResponse(true);
+      return true;
+    }
+    return false;
+  });
+}
 
 } // End of injection guard

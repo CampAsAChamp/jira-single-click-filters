@@ -3,13 +3,10 @@
   "name": "Jira Mutually Exclusive Quick Filters",
   "version": "1.0.0",
   "description": "Makes Jira quick filters mutually exclusive - clicking one filter automatically deselects all others.",
-  "permissions": [
-    "storage",
-    "scripting",
-    "activeTab"
-  ],
+  "permissions": ["storage", "scripting", "activeTab"],
   "host_permissions": [
-    "*://*.atlassian.net/*"
+    "*://*.atlassian.net/*",
+    "*://jira.cloud.intuit.com/*"
   ],
   "action": {
     "default_popup": "popup.html",
@@ -27,11 +24,10 @@
   "content_scripts": [
     {
       "matches": [
-        "*://*.atlassian.net/*"
+        "*://*.atlassian.net/*",
+        "*://jira.cloud.intuit.com/*"
       ],
-      "js": [
-        "content.js"
-      ],
+      "js": ["content.js"],
       "run_at": "document_idle"
     }
   ],
