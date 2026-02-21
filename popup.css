@@ -140,6 +140,29 @@ input:focus + .slider {
   margin-top: 8px;
 }
 
+.refresh-row {
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+.apply-btn {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #0747A6;
+  background: #f0f4ff;
+  border: 1px solid #0747A6;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.apply-btn:hover {
+  background: #0747A6;
+  color: white;
+}
+
 /* Toast notification (replaces the old status element) */
 .toast {
   position: fixed;

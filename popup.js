@@ -19,6 +19,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   const settings = await chrome.storage.sync.get(DEFAULT_SETTINGS);
   elements.toggle.checked = settings.mutuallyExclusive;
 
+  // Trigger re-initialization on the current tab so filters work even if board loaded late
+  try {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (tab?.id) {
+      await chrome.tabs.sendMessage(tab.id, { action: 'runInit' });
+    }
+  } catch (_) {
+    // Ignore if not a Jira tab or content script not ready
+  }
+
   // Helper: Show status message as toast
   function showStatus(message, type = 'success') {
     // Clear any existing timeout to prevent timing conflicts
@@ -88,4 +98,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Notify all tabs about the change
     await notifyAllTabs(isEnabled);
   });
+
+  // Apply to this page: re-run init on current tab (e.g. after board has loaded)
+  const applyBtn = document.getElementById('applyToPageBtn');
+  if (applyBtn) {
+    applyBtn.addEventListener('click', async () => {
+      try {
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        if (tab?.id) {
+          await chrome.tabs.sendMessage(tab.id, { action: 'runInit' });
+          showStatus('Applied to this page', 'success');
+        }
+      } catch (error) {
+        showStatus('Not a Jira page or page not ready', 'warning');
+      }
+    });
+  }
 });
