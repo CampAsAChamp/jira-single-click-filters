@@ -135,12 +135,12 @@ Found a bug or have a feature request? Please report issues on our GitHub reposi
 
 **Website URL:**
 ```
-https://github.com/CampAsAChamp/jira-mutually-exclusive-quick-filters
+https://github.com/CampAsAChamp/jira-single-click-filters
 ```
 
 **Support URL:**
 ```
-https://github.com/CampAsAChamp/jira-mutually-exclusive-quick-filters/issues
+https://github.com/CampAsAChamp/jira-single-click-filters/issues
 ```
 
 ### 4. Privacy & Compliance
@@ -177,7 +177,7 @@ Any changes to this privacy policy will be posted on this page.
 
 ## Contact
 For questions about this privacy policy, please open an issue on GitHub:
-https://github.com/CampAsAChamp/jira-mutually-exclusive-quick-filters/issues
+https://github.com/CampAsAChamp/jira-single-click-filters/issues
 ```
 
 **Action Required:**
@@ -213,7 +213,7 @@ https://github.com/CampAsAChamp/jira-mutually-exclusive-quick-filters/issues
 3. Create ZIP file of extension folder:
    ```bash
    cd /Users/nschneider/Documents/personal_repos
-   zip -r jira-mutually-exclusive-quick-filters.zip jira-mutually-exclusive-quick-filters/ \
+   zip -r jira-single-click-filters.zip jira-single-click-filters/ \
      -x "*.git*" -x "*node_modules*" -x "*.DS_Store" -x "*CHROME_WEB_STORE*"
    ```
 

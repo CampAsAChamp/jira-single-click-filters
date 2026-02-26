@@ -21,7 +21,7 @@ By default, Jira allows you to combine multiple quick filters by clicking them. 
 1. Open Chrome and navigate to `chrome://extensions/`
 2. Enable **Developer mode** (toggle in the top-right corner)
 3. Click **Load unpacked**
-4. Select the `jira-mutually-exclusive-quick-filters` folder
+4. Select the `jira-single-click-filters` folder
 5. The extension should now appear in your toolbar
 
 ### Reloading After Changes
@@ -150,7 +150,7 @@ The extension uses **event delegation** to detect when quick filters are clicked
 ### Project Structure
 
 ```
-jira-mutually-exclusive-quick-filters/
+jira-single-click-filters/
 ├── manifest.json          # Extension configuration
 ├── content.js            # Main logic for filter manipulation
 ├── background.js         # Service worker for state management

@@ -10,7 +10,7 @@ VERSION=$(grep -o '"version": "[^"]*' manifest.json | grep -o '[^"]*$')
 echo "📦 Version: $VERSION"
 
 # Output filename
-OUTPUT="jira-mutually-exclusive-quick-filters-v${VERSION}.zip"
+OUTPUT="jira-single-click-filters-v${VERSION}.zip"
 
 # Remove old package if it exists
 if [ -f "$OUTPUT" ]; then

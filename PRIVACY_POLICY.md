@@ -53,7 +53,7 @@ This extension does NOT use:
 ## Source Code
 
 This extension is open source. You can review the complete source code at:
-[https://github.com/CampAsAChamp/jira-mutually-exclusive-quick-filters](https://github.com/CampAsAChamp/jira-mutually-exclusive-quick-filters)
+[https://github.com/CampAsAChamp/jira-single-click-filters](https://github.com/CampAsAChamp/jira-single-click-filters)
 
 ## Changes to This Privacy Policy
 
@@ -68,7 +68,7 @@ To delete all data stored by this extension:
 ## Contact
 
 For questions, concerns, or feedback regarding this privacy policy or the extension:
-- Open an issue on GitHub: [https://github.com/CampAsAChamp/jira-mutually-exclusive-quick-filters/issues](https://github.com/CampAsAChamp/jira-mutually-exclusive-quick-filters/issues)
+- Open an issue on GitHub: [https://github.com/CampAsAChamp/jira-single-click-filters/issues](https://github.com/CampAsAChamp/jira-single-click-filters/issues)
 - Contact: [@CampAsAChamp](https://github.com/CampAsAChamp)
 
 ## Compliance
