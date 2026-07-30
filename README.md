@@ -2,6 +2,8 @@
 
 A Chrome extension that makes Jira quick filters mutually exclusive - clicking one filter automatically deselects all others.
 
+<img width="355" height="374" alt="image" src="https://github.com/user-attachments/assets/e1a1112b-6451-4e71-a532-97f906375ea2" />
+
 ## 🎯 Problem
 
 By default, Jira allows you to combine multiple quick filters by clicking them. However, if you want filters to be mutually exclusive (only one active at a time), you have to manually deselect the currently active filter before selecting a new one. This extension automates that process.
